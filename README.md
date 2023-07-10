@@ -2,8 +2,9 @@
 
 ## StyleRF
 
-Download data from ____, unzip and put in the same folder with StyleRF (data and StyleRF are in the same folder)
-Download checkpoints for reconstructing density field from ______, unzip and put under StyleRF folder (log is under StyleRF)
+
+Download data from * [data](https://drive.google.com/file/d/1AKFrdwtQLJ7wPKbdJgNaW-SXJuogKcDO/view?usp=sharing) , unzip and put in the same folder with StyleRF (data and StyleRF are in the same folder)
+Download checkpoints for reconstructing density field from * [log](https://drive.google.com/file/d/1zYQFRoKt2UZ3LTIQ1u98zmJ-3jE0GsD9/view?usp=sharing), unzip and put under StyleRF folder (log is under StyleRF)
 
 ```
 pip install tqdm scikit-image opencv-python configargparse lpips imageio-ffmpeg kornia lpips tensorboard plyfile
