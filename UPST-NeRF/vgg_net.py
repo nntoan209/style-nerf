@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-from function import calc_mean_std
+from UPST_NeRF.function import calc_mean_std
 
 decoder = nn.Sequential(
     nn.ReflectionPad2d((1, 1, 1, 1)),

@@ -1,7 +1,7 @@
 _base_ = '../default.py'
 
 expname = 'chair'
-basedir = './logs/nerf_synthetic'
+basedir = '../UPST_NeRF/logs/nerf_synthetic'
 
 data = dict(
     datadir='../data/nerf_synthetic/chair',

@@ -8,7 +8,7 @@ import math
 import scipy
 import numpy as np
 from scipy.ndimage import grey_dilation, grey_erosion
-import vgg_net
+import UPST_NeRF.vgg_net
 # from sampler import InfiniteSamplerWrapper
 from math import log, sqrt, pi
 import os

@@ -93,7 +93,7 @@ def config_parser():
                         help='do not optimize, reload weights and render out render_poses path')
     parser.add_argument("--render_test", action='store_true',default=False)
     parser.add_argument("--render_train", action='store_true',default=False)
-    parser.add_argument("--render_video", action='store_true',default=True)
+    parser.add_argument("--render_video", action='store_true',default=False)
     parser.add_argument("--render_video_factor", type=int, default=0,
                         help='downsampling factor to speed up rendering, set 4 or 8 for fast preview')
     parser.add_argument("--eval_ssim", action='store_true',default=True)
@@ -105,6 +105,11 @@ def config_parser():
                         help='frequency of console printout and metric loggin')
     parser.add_argument("--i_weights", type=int, default=1e6,
                         help='frequency of weight ckpt saving')
+    
+    # for custom input view
+    parser.add_argument("--render_single", action="store_true", default=False)
+    parser.add_argument("--phi", type=float, default=None)
+    parser.add_argument("--theta", type=float, default=None)
     return parser
 
 
@@ -117,7 +122,8 @@ def render_viewpoints_style(style_img, model, render_poses, HW, Ks, ndc, render_
     assert len(render_poses) == len(HW) and len(HW) == len(Ks)
     model.eval()
     print(style_img)
-    style_images = Image.open(os.path.join(style_img)).convert('RGB')
+    if isinstance(style_img, str):
+        style_images = Image.open(os.path.join(style_img)).convert('RGB')
 
     style_embedded = data_transform_view(style_images)
     style_embedded = style_embedded.to(device)
@@ -280,10 +286,10 @@ def seed_everything():
     np.random.seed(args.seed)
     random.seed(args.seed)
 
-def load_everything(cfg):
+def load_everything(cfg, infer_cfg):
     '''Load images / poses / camera settings / data split.
     '''
-    data_dict = load_data(cfg.data)
+    data_dict = load_data(cfg.data, infer_cfg)
 
     # remove useless field
     kept_keys = {
@@ -978,7 +984,15 @@ if __name__=='__main__':
     else:
         device = torch.device('cpu')
     seed_everything()
-    data_dict = load_everything(cfg=cfg)
+    
+    infer_cfg = None
+    if args.render_single:
+        assert (args.phi is not None) and (args.theta is not None), "Must specify phi and theta to render a single view"
+        infer_cfg = {
+            "phi": args.phi,
+            "theta": args.theta
+        }
+    data_dict = load_everything(cfg=cfg, infer_cfg=infer_cfg)
 
     # export scene bbox and camera poses in 3d for debugging and visualization
     if args.export_bbox_and_cams_only:
@@ -1092,7 +1106,7 @@ if __name__=='__main__':
 
 
     if args.render_style:
-        if args.render_test or args.render_train or args.render_video:
+        if args.render_test or args.render_train or args.render_video or args.render_single:
             if args.ft_path:
                 ckpt_path = args.ft_path
             else:
@@ -1151,6 +1165,19 @@ if __name__=='__main__':
                     **render_viewpoints_kwargs)
             imageio.mimwrite(os.path.join(testsavedir, 'video.rgb.mp4'), utils.to8b(rgbs), fps=30, quality=8)
             imageio.mimwrite(os.path.join(testsavedir, 'video.depth.mp4'), utils.to8b(1 - depths / np.max(depths)), fps=30, quality=8)
+        
+        if args.render_single:
+            testsavedir = os.path.join(cfg.basedir, cfg.expname, f'render_single_{ckpt_name}')
+            os.makedirs(testsavedir, exist_ok=True)
+            rgbs, depths = render_viewpoints_style(
+                    style_img=style_img,
+                    render_poses=data_dict['render_poses'],
+                    HW=data_dict['HW'][data_dict['i_test']][[0]].repeat(len(data_dict['render_poses']), 0),
+                    Ks=data_dict['Ks'][data_dict['i_test']][[0]].repeat(len(data_dict['render_poses']), 0),
+                    render_factor=args.render_video_factor,
+                    savedir=testsavedir,
+                    **render_viewpoints_kwargs)
+            
 
         # render video
         if args.render_video:

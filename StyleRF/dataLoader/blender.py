@@ -9,9 +9,35 @@ from torchvision import transforms as T
 
 from .ray_utils import *
 
+trans_t = lambda t : torch.Tensor([
+    [1,0,0,0],
+    [0,1,0,0],
+    [0,0,1,t],
+    [0,0,0,1]]).float()
+
+rot_phi = lambda phi : torch.Tensor([
+    [1,0,0,0],
+    [0,np.cos(phi),-np.sin(phi),0],
+    [0,np.sin(phi), np.cos(phi),0],
+    [0,0,0,1]]).float()
+
+rot_theta = lambda th : torch.Tensor([
+    [np.cos(th),0,-np.sin(th),0],
+    [0,1,0,0],
+    [np.sin(th),0, np.cos(th),0],
+    [0,0,0,1]]).float()
+
+
+def pose_spherical(theta, phi, radius):
+    c2w = trans_t(radius)
+    c2w = rot_phi(phi/180.*np.pi) @ c2w
+    c2w = rot_theta(theta/180.*np.pi) @ c2w
+    c2w = torch.Tensor(np.array([[-1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]])) @ c2w
+    return c2w
+
 
 class BlenderDataset(Dataset):
-    def __init__(self, datadir, split='train', downsample=1.0, is_stack=False, N_vis=-1):
+    def __init__(self, datadir, split='train', downsample=1.0, is_stack=False, N_vis=-1, infer_cfg=None):
 
         self.N_vis = N_vis
         self.root_dir = datadir
@@ -23,6 +49,8 @@ class BlenderDataset(Dataset):
         self.scene_bbox = torch.tensor([[-1.5, -1.5, -1.5], [1.5, 1.5, 1.5]])
         self.blender2opencv = np.array([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]])
         self.downsample=downsample
+        self.infer_cfg = infer_cfg
+        
         self.read_meta()
         self.define_proj_mat()
 
@@ -53,6 +81,11 @@ class BlenderDataset(Dataset):
 
         self.image_paths = []
         self.poses = []
+        if self.infer_cfg is None:
+            self.render_path = torch.stack([pose_spherical(angle, -30.0, 4.0) @ self.blender2opencv for angle in np.linspace(-180,180,40+1)[:-1]] +
+                                        [pose_spherical(171, angle, 4.0) @ self.blender2opencv for angle in np.linspace(-30, 330, 40+1)][1:], 0)
+        else:
+            self.render_path = torch.stack([pose_spherical(self.infer_cfg["theta"], self.infer_cfg["phi"], 4.0) @ self.blender2opencv], 0)
         self.all_rays = []
         self.all_rgbs = []
         self.all_masks = []

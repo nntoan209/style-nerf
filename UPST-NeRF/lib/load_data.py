@@ -9,7 +9,7 @@ from .load_deepvoxels import load_dv_data
 from .load_co3d import load_co3d_data
 
 
-def load_data(args):
+def load_data(args, infer_cfg):
 
     K, depths = None, None
     Ks = None
@@ -43,7 +43,7 @@ def load_data(args):
         print('NEAR FAR', near, far)
 
     elif args.dataset_type == 'blender':
-        images, poses, render_poses, hwf, i_split = load_blender_data(args.datadir, args.half_res, args.testskip)
+        images, poses, render_poses, hwf, i_split = load_blender_data(args.datadir, args.half_res, args.testskip, infer_cfg)
         print('Loaded blender', images.shape, render_poses.shape, hwf, args.datadir)
         i_train, i_val, i_test = i_split
 

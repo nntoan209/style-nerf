@@ -1,8 +1,8 @@
 dataset_name = blender
 datadir = ../data/nerf_synthetic/ship
-ckpt = ./log_feature/ship/ship.th
+ckpt = ../StyleRF/log_feature/ship/ship.th
 expname = ship
-basedir = ./log_style
+basedir = ../StyleRF/log_style
 
 patch_size = 128
 chunk_size = 512

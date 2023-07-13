@@ -1,12 +1,12 @@
 dataset_name = blender
 datadir = ../data/nerf_synthetic/chair
-ckpt = ./log/nerf/chair.th
+ckpt = ../StyleRF/log/nerf/chair.th
 expname = chair
-basedir = ./log_feature
+basedir = ../StyleRF/log_feature
 
 TV_weight_feature = 10
 
-n_iters = 15000
+n_iters = 25000
 patch_size = 128
 batch_size = 256
 chunk_size = 512

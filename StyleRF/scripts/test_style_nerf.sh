@@ -14,7 +14,7 @@ python train_style.py --config $config_file \
 --style_img $style_image_path \
 --render_only 1 \
 --render_train 0 \
---render_test 1 \
---render_path 0 \
+--render_test 0 \
+--render_path 1 \
 --chunk_size 512 \
 --rm_weight_mask_thre 0.0001

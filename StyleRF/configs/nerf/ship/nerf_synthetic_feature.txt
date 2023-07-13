@@ -1,8 +1,8 @@
 dataset_name = blender
 datadir = ../data/nerf_synthetic/ship
-ckpt = ./log/nerf/ship.th
+ckpt = ../StyleRF/log/nerf/ship.th
 expname = ship
-basedir = ./log_feature
+basedir = ../StyleRF/log_feature
 
 TV_weight_feature = 10
 

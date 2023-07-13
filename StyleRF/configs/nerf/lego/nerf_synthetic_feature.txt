@@ -1,13 +1,13 @@
 dataset_name = blender
 datadir = ../data/nerf_synthetic/lego
-ckpt = ./log/nerf/lego.th
+ckpt = ../StyleRF/log/nerf/lego.th
 expname = lego
-basedir = ./log_feature
+basedir = ../StyleRF/log_feature
 
 TV_weight_feature = 10
 
-n_iters = 15000
-patch_size = 128
+n_iters = 25000
+patch_size = 256
 batch_size = 256
 chunk_size = 512
 

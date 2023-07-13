@@ -10,8 +10,8 @@ import torch.nn.functional as F
 from torch_scatter import scatter_add, segment_coo
 
 
-from YUVStyleNet import *
-import vgg_net
+from UPST_NeRF.YUVStyleNet import *
+from UPST_NeRF import vgg_net
 from .upst import Raw2Alpha, Alphas2Weights, render_utils_cuda, total_variation_cuda, MaskCache
 from .upst import HyperFCNet
 
@@ -31,7 +31,7 @@ class UPSTMPI_DirectGO(torch.nn.Module):
 
         # VGG
         vgg = vgg_net.vgg
-        vgg.load_state_dict(torch.load("./vgg_normalised.pth"))
+        vgg.load_state_dict(torch.load("../UPST_NeRF/vgg_normalised.pth"))
         self.encoder = vgg_net.Net(vgg)
         # Fixed RAIN_net
         for param in  self.encoder.parameters():

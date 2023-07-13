@@ -69,7 +69,7 @@ fine_train.update(dict(
 
 style_train = deepcopy(fine_train)
 style_train.update(dict(
-    N_iters=100000,
+    N_iters=200000,
     lrate_decay=250,               # lr decay by 0.1 after every lrate_decay*1000 steps
     # pervoxel_lr=False,
     # ray_sampler='in_maskcache',

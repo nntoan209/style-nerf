@@ -1,10 +1,10 @@
 dataset_name = blender
 datadir = ../data/nerf_synthetic/lego
-ckpt = ./log_feature/lego/lego.th
+ckpt = ../StyleRF/log_feature/lego/lego.th
 expname = lego
-basedir = ./log_style
+basedir = ../StyleRF/log_style
 
-patch_size = 128
+patch_size = 256
 chunk_size = 512
 
 content_weight = 1
@@ -12,7 +12,7 @@ style_weight = 20
 
 rm_weight_mask_thre = 0.01
 
-n_iters = 15000
+n_iters = 25000
 
 n_lamb_sigma = [16,16,16]
 n_lamb_sh = [48,48,48]
