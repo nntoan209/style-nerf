@@ -65,7 +65,7 @@ def upst_config_parser():
     parser.add_argument("--theta", type=float, default=None)
     return parser
 
-def load_everything(cfg, infer_cfg):
+def load_everything(cfg, infer_cfg=None):
     '''Load images / poses / camera settings / data split.
     '''
     data_dict = load_data(cfg.data, infer_cfg)
@@ -195,6 +195,7 @@ def generate_image_upst(scene, style_image, phi, theta):
     seed_everything()
     
     infer_cfg = {
+        'type': "single",
         "phi": phi,
         "theta": theta
     }
@@ -264,7 +265,7 @@ def generate_video_upst(scene, style_image):
         device = torch.device('cpu')
     seed_everything()
     
-    infer_cfg = None
+    infer_cfg = {'type': "video"}
     data_dict = load_everything(cfg=cfg, infer_cfg=infer_cfg)
       
     if args.render_style:
