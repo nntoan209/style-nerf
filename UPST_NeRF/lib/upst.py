@@ -6,12 +6,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from UPST_NeRF.hyperlayers import HyperLinear
-from UPST_NeRF.hyperlayers import partialclass
-from UPST_NeRF.hyperlayers import HyperLayer
+from hyperlayers import HyperLinear
+from hyperlayers import partialclass
+from hyperlayers import HyperLayer
 
-from UPST_NeRF.YUVStyleNet import *
-from UPST_NeRF import vgg_net
+from YUVStyleNet import *
+import vgg_net
 
 
 

@@ -10,8 +10,8 @@ import torch.nn.functional as F
 from torch_scatter import scatter_add, segment_coo
 
 
-from UPST_NeRF.YUVStyleNet import *
-from UPST_NeRF import vgg_net
+from YUVStyleNet import *
+import vgg_net
 from .upst import Raw2Alpha, Alphas2Weights, render_utils_cuda, total_variation_cuda, MaskCache
 from .upst import HyperFCNet
 
